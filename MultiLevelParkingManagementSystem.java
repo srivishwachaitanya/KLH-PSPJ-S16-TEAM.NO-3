@@ -1,0 +1,76 @@
+import java.util.*;
+import java.nio.file.*;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+public class MultiLevelParkingManagementSystem {
+
+    static Scanner sc = new Scanner(System.in);
+    static final String FILE = "parking_records.txt";
+    static final int SLOTS_PER_LEVEL = 5;
+
+    // Parking levels: T = two-wheeler, F = four-wheeler
+    static String[] levels = {"T1", "T2", "F1", "F2"};
+    static boolean[][] occupied = new boolean[4][SLOTS_PER_LEVEL];
+
+    static ArrayList<ParkingRecord> records = new ArrayList<>();
+    static int tokenCounter = 1;
+
+    static final double TWO_WHEELER_RATE = 20.0;
+    static final double FOUR_WHEELER_RATE = 40.0;
+
+    // Class representing one parking record
+    static class ParkingRecord {
+        String token, name, phone, vehicleNumber;
+        String vehicleType, level, status;
+        int duration, slot;
+        long entryTime;
+        double bill;
+
+        ParkingRecord(String token, String name, String phone,
+                      String vehicleNumber, String vehicleType,
+                      int duration, String level, int slot,
+                      long entryTime, String status, double bill) {
+            this.token = token;
+            this.name = name;
+            this.phone = phone;
+            this.vehicleNumber = vehicleNumber;
+            this.vehicleType = vehicleType;
+            this.duration = duration;
+            this.level = level;
+            this.slot = slot;
+            this.entryTime = entryTime;
+            this.status = status;
+            this.bill = bill;
+        }
+
+        // Convert a record into a line for file storage
+        public String toFileString() {
+            return token + "|" + name + "|" + phone + "|"
+                    + vehicleNumber + "|" + vehicleType + "|"
+                    + duration + "|" + level + "|" + slot + "|"
+                    + entryTime + "|" + status + "|" + bill;
+        }
+
+        public void display() {
+            System.out.println("----------------------------------");
+            System.out.println("Token Number   : " + token);
+            System.out.println("Customer Name  : " + name);
+            System.out.println("Phone Number   : " + phone);
+            System.out.println("Vehicle Number : " + vehicleNumber);
+            System.out.println("Vehicle Type   : " + vehicleType);
+            System.out.println("Parking Level  : " + level);
+            System.out.println("Parking Spot   : " + slot);
+            System.out.println("Duration       : " + duration + " hour(s)");
+            System.out.println("Entry Time     : "
+                    + LocalDateTime.ofInstant(
+                    java.time.Instant.ofEpochMilli(entryTime),
+                    java.time.ZoneId.systemDefault()));
+            System.out.println("Status         : " + status);
+            if (status.equals("COMPLETED")) {
+                System.out.printf("Parking Bill   : Rs. %.2f%n", bill);
+            }
+            System.out.println("----------------------------------");
+        }
+    }
