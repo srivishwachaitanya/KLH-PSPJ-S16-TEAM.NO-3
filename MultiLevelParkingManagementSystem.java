@@ -464,3 +464,21 @@ static String formatTime(long time) {
                     if (p.length != 11) {
                         continue;
                     }
+ParkingRecord r = new ParkingRecord(
+                            p[0], p[1], p[2], p[3], p[4],
+                            Integer.parseInt(p[5]), p[6],
+                            Integer.parseInt(p[7]),
+                            Long.parseLong(p[8]), p[9],
+                            Double.parseDouble(p[10]));
+
+                    int levelIndex = Arrays.asList(levels)
+                            .indexOf(r.level);
+
+                    if (levelIndex < 0
+                            || r.slot < 1
+                            || r.slot > SLOTS_PER_LEVEL
+                            || r.duration < 1
+                            || (!r.status.equals("ACTIVE")
+                            && !r.status.equals("COMPLETED"))) {
+                        continue;
+                    }
