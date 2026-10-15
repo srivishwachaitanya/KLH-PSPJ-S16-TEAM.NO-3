@@ -4,15 +4,53 @@ Manages parking levels via 1-D strings and slot occupancy states via 2-D boolean
     static String[] levels = {"T1", "T2", "F1", "F2"};
     static boolean[][] occupied = new boolean[4][SLOTS_PER_LEVEL];
 
-    static void showAvailableSlots() {
-        System.out.println("\n--- Available Slots ---");
-        for (int i = 0; i < levels.length; i++) {
-            System.out.print("Level " + levels[i] + ": ");
-            for (int j = 0; j < SLOTS_PER_LEVEL; j++) {
-                if (!occupied[i][j]) {
-                    System.out.print("[Slot " + (j + 1) + "] ");
+    // Allocate spots based on parking duration
+    static int[] findSpot(int type, int duration) {
+        int startLevel = (type == 1) ? 0 : 2;
+        int endLevel = startLevel + 2;
+
+        int preferredSlot;
+
+        if (duration <= 2) {
+            preferredSlot = 0;
+        } else if (duration <= 5) {
+            preferredSlot = 2;
+        } else {
+            preferredSlot = 4;
+        }
+
+        for (int s = preferredSlot; s < SLOTS_PER_LEVEL; s++) {
+            for (int l = startLevel; l < endLevel; l++) {
+                if (!occupied[l][s]) {
+                    return new int[]{l, s};
                 }
             }
-            System.out.println();
+        }
+
+        for (int s = 0; s < preferredSlot; s++) {
+            for (int l = startLevel; l < endLevel; l++) {
+                if (!occupied[l][s]) {
+                    return new int[]{l, s};
+                }
+            }
+        }
+
+        return null;
+    }
+
+    static void showAvailableSlots() {
+        System.out.println("\n--- PARKING SLOT AVAILABILITY ---");
+
+        for (int l = 0; l < levels.length; l++) {
+            int available = 0;
+            System.out.println("\nLevel " + levels[l] + (l < 2 ? " (Two-Wheelers)" : " (Four-Wheelers)"));
+
+            for (int s = 0; s < SLOTS_PER_LEVEL; s++) {
+                if (!occupied[l][s]) {
+                    available++;
+                }
+                System.out.println("Spot " + (s + 1) + " : " + (occupied[l][s] ? "OCCUPIED" : "AVAILABLE") + (s == 0 ? " (Nearest to exit)" : ""));
+            }
+            System.out.println("Available spots: " + available + "/" + SLOTS_PER_LEVEL);
         }
     }
