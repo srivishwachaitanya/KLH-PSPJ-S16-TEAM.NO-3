@@ -172,3 +172,34 @@ public class MultiLevelParkingManagementSystem {
             System.out.println("Invalid vehicle number.");
             return;
         }
+// Prevent duplicate active vehicle registration
+        for (ParkingRecord r : records) {
+            if (r.status.equals("ACTIVE")
+                    && r.vehicleNumber.equalsIgnoreCase(vehicleNumber)) {
+                System.out.println("This vehicle is already parked.");
+                System.out.println("Existing token: " + r.token);
+                return;
+            }
+        }
+
+        System.out.println("\nVehicle Type:");
+        System.out.println("1. Two-Wheeler");
+        System.out.println("2. Four-Wheeler");
+
+        int type = readInt("Choose vehicle type: ");
+
+        if (type != 1 && type != 2) {
+            System.out.println("Invalid vehicle type.");
+            return;
+        }
+
+        String vehicleType = (type == 1)
+                ? "Two-Wheeler" : "Four-Wheeler";
+
+        System.out.println("Enter expected parking duration (hours).");
+        int duration = readInt("Duration: ");
+
+        if (duration <= 0 || duration > 720) {
+            System.out.println("Duration must be between 1 and 720 hours.");
+            return;
+        }
