@@ -1,52 +1,60 @@
 CO5: Strings, Library Algorithms & File Persistence
 Handles string formatting, text processing, and permanent data storage using Java NIO files
-// String conversion for file storage inside ParkingRecord class
-        public String toFileString() {
+public String toFileString() {
             return token + "|" + name + "|" + phone + "|"
                     + vehicleNumber + "|" + vehicleType + "|"
                     + duration + "|" + level + "|" + slot + "|"
                     + entryTime + "|" + status + "|" + bill;
         }
 
-        // File Writing Persistence
-        static void saveRecords(ArrayList<ParkingRecord> records) {
+        static String formatTime(long time) {
+            return LocalDateTime.ofInstant(
+                    java.time.Instant.ofEpochMilli(time),
+                    java.time.ZoneId.systemDefault()
+            ).format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
+        }
+
+        static void saveRecords() {
             try {
                 ArrayList<String> lines = new ArrayList<>();
                 for (ParkingRecord r : records) {
                     lines.add(r.toFileString());
                 }
-                Files.write(Paths.get(FILE), lines);
+                Files.write(Path.of(FILE), lines);
             } catch (IOException e) {
-                System.out.println("Error saving records to file.");
+                System.out.println("Error saving records: " + e.getMessage());
             }
         }
 
-        // File Reading Persistence
-        static void loadRecords(ArrayList<ParkingRecord> records, boolean[][] occupied, String[] levels) {
-            Path path = Paths.get(FILE);
+        static void loadRecords() {
+            Path path = Path.of(FILE);
             if (!Files.exists(path)) return;
             try {
                 List<String> lines = Files.readAllLines(path);
                 for (String line : lines) {
-                    String[] parts = line.split("\\|");
-                    if (parts.length == 11) {
+                    try {
+                        String[] p = line.split("\\|", -1);
+                        if (p.length != 11) continue;
+
                         ParkingRecord r = new ParkingRecord(
-                            parts[0], parts[1], parts[2], parts[3], parts[4],
-                            Integer.parseInt(parts[5]), parts[6], Integer.parseInt(parts[7]),
-                            Long.parseLong(parts[8]), parts[9], Double.parseDouble(parts[10])
-                        );
+                                p[0], p[1], p[2], p[3], p[4],
+                                Integer.parseInt(p[5]), p[6],
+                                Integer.parseInt(p[7]),
+                                Long.parseLong(p[8]), p[9],
+                                Double.parseDouble(p[10]));
+
+                        int levelIndex = Arrays.asList(levels).indexOf(r.level);
+                        if (levelIndex < 0 || r.slot < 1 || r.slot > SLOTS_PER_LEVEL || r.duration < 1) continue;
+
                         records.add(r);
-                        if (r.status.equals("PARKED")) {
-                            for (int i = 0; i < levels.length; i++) {
-                                if (levels[i].equals(r.level)) {
-                                    occupied[i][r.slot - 1] = true;
-                                    break;
-                                }
-                            }
+                        if (r.status.equals("ACTIVE")) {
+                            occupied[levelIndex][r.slot - 1] = true;
                         }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Skipping a malformed saved record.");
                     }
                 }
             } catch (IOException e) {
-                System.out.println("Error loading records from file.");
+                System.out.println("Could not load records: " + e.getMessage());
             }
         }
