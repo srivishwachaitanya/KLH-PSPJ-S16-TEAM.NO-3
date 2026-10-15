@@ -351,3 +351,43 @@ public class MultiLevelParkingManagementSystem {
         }
 
         long exitTime = System.currentTimeMillis();
+        // Charge for actual time, rounding up to the next hour.
+        // The expected duration is used for slot allocation only.
+        long elapsedMillis = exitTime - r.entryTime;
+        long hours = Math.max(1,
+                (long) Math.ceil(elapsedMillis / 3600000.0));
+
+        double rate = r.vehicleType.equals("Two-Wheeler")
+                ? TWO_WHEELER_RATE : FOUR_WHEELER_RATE;
+
+        r.bill = hours * rate;
+        r.status = "COMPLETED";
+
+        int levelIndex = Arrays.asList(levels).indexOf(r.level);
+        if (levelIndex >= 0) {
+            occupied[levelIndex][r.slot - 1] = false;
+        }
+
+        saveRecords();
+
+        System.out.println("\n========== PARKING BILL ==========");
+        System.out.println("Token Number    : " + r.token);
+        System.out.println("Customer        : " + r.name);
+        System.out.println("Vehicle Number  : " + r.vehicleNumber);
+        System.out.println("Vehicle Type    : " + r.vehicleType);
+        System.out.println("Parking Location: " + r.level
+                + " - Spot " + r.slot);
+        System.out.println("Entry Time      : "
+                + formatTime(r.entryTime));
+        System.out.println("Exit Time       : " + formatTime(exitTime));
+        System.out.println("Charged Hours   : " + hours);
+        System.out.printf("Rate per Hour   : Rs. %.2f%n", rate);
+        System.out.printf("TOTAL BILL      : Rs. %.2f%n", r.bill);
+        System.out.println("Payment Status  : TO BE PAID");
+        System.out.println("==================================");
+        System.out.println("Spot released successfully.");
+        System.out.println("Thank you! Visit again.");
+
+        System.out.println("\nNote: This is a bill calculation demo.");
+        System.out.println("No actual payment is collected.");
+    }
