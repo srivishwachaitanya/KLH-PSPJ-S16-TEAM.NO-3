@@ -203,3 +203,32 @@ public class MultiLevelParkingManagementSystem {
             System.out.println("Duration must be between 1 and 720 hours.");
             return;
         }
+// Find a suitable spot according to duration
+        int[] result = findSpot(type, duration);
+
+        if (result == null) {
+            System.out.println("Sorry! No suitable parking spot available.");
+            return;
+        }
+
+        int levelIndex = result[0];
+        int slotIndex = result[1];
+
+        occupied[levelIndex][slotIndex] = true;
+
+        String token = "PK" + System.currentTimeMillis()
+                + tokenCounter++;
+
+        ParkingRecord record = new ParkingRecord(
+                token, name, phone, vehicleNumber, vehicleType,
+                duration, levels[levelIndex], slotIndex + 1,
+                System.currentTimeMillis(), "ACTIVE", 0.0);
+
+        records.add(record);
+        saveRecords();
+
+        System.out.println("\n========== PARKING TOKEN ==========");
+        record.display();
+        System.out.println("Keep this token number for vehicle exit.");
+        System.out.println("===================================");
+    }
