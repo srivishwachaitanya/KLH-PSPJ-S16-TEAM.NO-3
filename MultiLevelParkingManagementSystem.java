@@ -232,3 +232,39 @@ public class MultiLevelParkingManagementSystem {
         System.out.println("Keep this token number for vehicle exit.");
         System.out.println("===================================");
     }
+    // Allocate spots based on parking duration
+    static int[] findSpot(int type, int duration) {
+        int startLevel = (type == 1) ? 0 : 2;
+        int endLevel = startLevel + 2;
+
+        // Short stay: near exit; medium: middle; long: farther away
+        int preferredSlot;
+
+        if (duration <= 2) {
+            preferredSlot = 0;
+        } else if (duration <= 5) {
+            preferredSlot = 2;
+        } else {
+            preferredSlot = 4;
+        }
+
+        // First search at or farther than preferred position
+        for (int s = preferredSlot; s < SLOTS_PER_LEVEL; s++) {
+            for (int l = startLevel; l < endLevel; l++) {
+                if (!occupied[l][s]) {
+                    return new int[]{l, s};
+                }
+            }
+        }
+
+        // If necessary, use a closer available spot
+        for (int s = 0; s < preferredSlot; s++) {
+            for (int l = startLevel; l < endLevel; l++) {
+                if (!occupied[l][s]) {
+                    return new int[]{l, s};
+                }
+            }
+        }
+
+        return null;
+    }
