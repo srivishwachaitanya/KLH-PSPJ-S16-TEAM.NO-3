@@ -1,0 +1,53 @@
+CO4: Objects, Encapsulation & Exception Handling
+Models the domain using class objects and implements fail-safe user input handling
+// Exception Handling (Fail-Safe Input)
+    static int readInt(String prompt) {
+        while (true) {
+            try {
+                System.out.print(prompt);
+                return Integer.parseInt(sc.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid integer.");
+            }
+        }
+    }
+
+    // Encapsulated Domain Class
+    static class ParkingRecord {
+        String token, name, phone, vehicleNumber;
+        String vehicleType, level, status;
+        int duration, slot;
+        long entryTime;
+        double bill;
+
+        ParkingRecord(String token, String name, String phone,
+                      String vehicleNumber, String vehicleType,
+                      int duration, String level, int slot,
+                      long entryTime, String status, double bill) {
+            this.token = token;
+            this.name = name;
+            this.phone = phone;
+            this.vehicleNumber = vehicleNumber;
+            this.vehicleType = vehicleType;
+            this.duration = duration;
+            this.level = level;
+            this.slot = slot;
+            this.entryTime = entryTime;
+            this.status = status;
+            this.bill = bill;
+        }
+
+        public void display() {
+            System.out.println("----------------------------------");
+            System.out.println("Token Number   : " + token);
+            System.out.println("Customer Name  : " + name);
+            System.out.println("Phone Number   : " + phone);
+            System.out.println("Vehicle Number : " + vehicleNumber);
+            System.out.println("Vehicle Type   : " + vehicleType);
+            System.out.println("Parking Level  : " + level);
+            System.out.println("Parking Spot   : " + slot);
+            System.out.println("Duration       : " + duration + " hour(s)");
+            System.out.println("Status         : " + status);
+            System.out.println("----------------------------------");
+        }
+    }
