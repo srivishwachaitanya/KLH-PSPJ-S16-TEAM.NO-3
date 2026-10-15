@@ -268,3 +268,47 @@ public class MultiLevelParkingManagementSystem {
 
         return null;
     }
+// Show availability for every level
+    static void showAvailableSlots() {
+        System.out.println("\n--- PARKING SLOT AVAILABILITY ---");
+
+        for (int l = 0; l < levels.length; l++) {
+            int available = 0;
+
+            System.out.println("\nLevel " + levels[l]
+                    + (l < 2 ? " (Two-Wheelers)" : " (Four-Wheelers)"));
+
+            for (int s = 0; s < SLOTS_PER_LEVEL; s++) {
+                if (!occupied[l][s]) {
+                    available++;
+                }
+
+                System.out.println("Spot " + (s + 1) + " : "
+                        + (occupied[l][s] ? "OCCUPIED" : "AVAILABLE")
+                        + (s == 0 ? " (Nearest to exit)" : ""));
+            }
+
+            System.out.println("Available spots: " + available
+                    + "/" + SLOTS_PER_LEVEL);
+        }
+    }
+
+    // Search an active vehicle using its token
+    static void searchToken() {
+        System.out.print("\nEnter token number: ");
+        String token = sc.nextLine().trim();
+
+        ParkingRecord r = findRecord(token);
+
+        if (r == null) {
+            System.out.println("No record found for this token.");
+        } else {
+            r.display();
+
+            if (r.status.equals("ACTIVE")) {
+                System.out.println("Vehicle is currently parked.");
+            } else {
+                System.out.println("This parking session is completed.");
+            }
+        }
+    }
