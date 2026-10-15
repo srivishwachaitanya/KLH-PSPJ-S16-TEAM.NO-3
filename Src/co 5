@@ -1,0 +1,52 @@
+CO5: Strings, Library Algorithms & File Persistence
+Handles string formatting, text processing, and permanent data storage using Java NIO files
+// String conversion for file storage inside ParkingRecord class
+        public String toFileString() {
+            return token + "|" + name + "|" + phone + "|"
+                    + vehicleNumber + "|" + vehicleType + "|"
+                    + duration + "|" + level + "|" + slot + "|"
+                    + entryTime + "|" + status + "|" + bill;
+        }
+
+        // File Writing Persistence
+        static void saveRecords(ArrayList<ParkingRecord> records) {
+            try {
+                ArrayList<String> lines = new ArrayList<>();
+                for (ParkingRecord r : records) {
+                    lines.add(r.toFileString());
+                }
+                Files.write(Paths.get(FILE), lines);
+            } catch (IOException e) {
+                System.out.println("Error saving records to file.");
+            }
+        }
+
+        // File Reading Persistence
+        static void loadRecords(ArrayList<ParkingRecord> records, boolean[][] occupied, String[] levels) {
+            Path path = Paths.get(FILE);
+            if (!Files.exists(path)) return;
+            try {
+                List<String> lines = Files.readAllLines(path);
+                for (String line : lines) {
+                    String[] parts = line.split("\\|");
+                    if (parts.length == 11) {
+                        ParkingRecord r = new ParkingRecord(
+                            parts[0], parts[1], parts[2], parts[3], parts[4],
+                            Integer.parseInt(parts[5]), parts[6], Integer.parseInt(parts[7]),
+                            Long.parseLong(parts[8]), parts[9], Double.parseDouble(parts[10])
+                        );
+                        records.add(r);
+                        if (r.status.equals("PARKED")) {
+                            for (int i = 0; i < levels.length; i++) {
+                                if (levels[i].equals(r.level)) {
+                                    occupied[i][r.slot - 1] = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                System.out.println("Error loading records from file.");
+            }
+        }
