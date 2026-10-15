@@ -145,3 +145,30 @@ public class MultiLevelParkingManagementSystem {
             }
         }
     }
+    // Park a vehicle
+    static void parkVehicle() {
+        System.out.println("\n--- VEHICLE REGISTRATION ---");
+
+        System.out.print("Enter customer name: ");
+        String name = sc.nextLine().trim();
+
+        if (name.isEmpty() || name.contains("|")) {
+            System.out.println("Invalid customer name.");
+            return;
+        }
+
+        System.out.print("Enter phone number: ");
+        String phone = sc.nextLine().trim();
+
+        if (!phone.matches("[0-9]{10}")) {
+            System.out.println("Enter a valid 10-digit phone number.");
+            return;
+        }
+
+        System.out.print("Enter vehicle registration number: ");
+        String vehicleNumber = sc.nextLine().trim().toUpperCase();
+
+        if (vehicleNumber.isEmpty() || vehicleNumber.contains("|")) {
+            System.out.println("Invalid vehicle number.");
+            return;
+        }
