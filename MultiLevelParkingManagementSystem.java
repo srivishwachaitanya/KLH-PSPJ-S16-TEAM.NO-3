@@ -431,3 +431,36 @@ static String formatTime(long time) {
         System.out.printf("Recorded Bills      : Rs. %.2f%n", revenue);
         System.out.println("=====================================");
     }
+// Save every record to a text file
+    static void saveRecords() {
+        try {
+            ArrayList<String> lines = new ArrayList<>();
+
+            for (ParkingRecord r : records) {
+                lines.add(r.toFileString());
+            }
+
+            Files.write(Path.of(FILE), lines);
+        } catch (IOException e) {
+            System.out.println("Error saving records: " + e.getMessage());
+        }
+    }
+
+    // Load records and restore occupied spots at startup
+    static void loadRecords() {
+        Path path = Path.of(FILE);
+
+        if (!Files.exists(path)) {
+            return;
+        }
+
+        try {
+            List<String> lines = Files.readAllLines(path);
+
+            for (String line : lines) {
+                try {
+                    String[] p = line.split("\\|", -1);
+
+                    if (p.length != 11) {
+                        continue;
+                    }
