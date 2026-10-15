@@ -121,3 +121,27 @@ public class MultiLevelParkingManagementSystem {
             System.out.println("----------------------------------");
         }
     }
+ // Dashboard
+    static void showDashboard() {
+        System.out.println("\n============== HOME DASHBOARD ==============");
+        System.out.println("1. Park a Vehicle");
+        System.out.println("2. View Available Parking Slots");
+        System.out.println("3. Search Vehicle by Token Number");
+        System.out.println("4. View Customer and Vehicle Details");
+        System.out.println("5. Remove Vehicle and Generate Bill");
+        System.out.println("6. Parking Summary");
+        System.out.println("7. Exit");
+        System.out.println("============================================");
+    }
+
+    // Safe integer input
+    static int readInt(String message) {
+        while (true) {
+            System.out.print(message);
+            try {
+                return Integer.parseInt(sc.nextLine().trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a valid whole number.");
+            }
+        }
+    }
