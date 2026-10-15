@@ -1,10 +1,11 @@
+
 import java.util.*;
 import java.nio.file.*;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class MultiLevelParkingManagementSystem {
+public class ParkingManagementSystem {
 
     static Scanner sc = new Scanner(System.in);
     static final String FILE = "parking_records.txt";
@@ -70,7 +71,11 @@ public class MultiLevelParkingManagementSystem {
             System.out.println("Status         : " + status);
             if (status.equals("COMPLETED")) {
                 System.out.printf("Parking Bill   : Rs. %.2f%n", bill);
-                
+            }
+            System.out.println("----------------------------------");
+        }
+    }
+
     public static void main(String[] args) {
         loadRecords();
 
@@ -116,12 +121,7 @@ public class MultiLevelParkingManagementSystem {
         sc.close();
     }
 
-
-            }
-            System.out.println("----------------------------------");
-        }
-    }
- // Dashboard
+    // Dashboard
     static void showDashboard() {
         System.out.println("\n============== HOME DASHBOARD ==============");
         System.out.println("1. Park a Vehicle");
@@ -145,6 +145,7 @@ public class MultiLevelParkingManagementSystem {
             }
         }
     }
+
     // Park a vehicle
     static void parkVehicle() {
         System.out.println("\n--- VEHICLE REGISTRATION ---");
@@ -172,7 +173,8 @@ public class MultiLevelParkingManagementSystem {
             System.out.println("Invalid vehicle number.");
             return;
         }
-// Prevent duplicate active vehicle registration
+
+        // Prevent duplicate active vehicle registration
         for (ParkingRecord r : records) {
             if (r.status.equals("ACTIVE")
                     && r.vehicleNumber.equalsIgnoreCase(vehicleNumber)) {
@@ -203,7 +205,8 @@ public class MultiLevelParkingManagementSystem {
             System.out.println("Duration must be between 1 and 720 hours.");
             return;
         }
-// Find a suitable spot according to duration
+
+        // Find a suitable spot according to duration
         int[] result = findSpot(type, duration);
 
         if (result == null) {
@@ -232,6 +235,7 @@ public class MultiLevelParkingManagementSystem {
         System.out.println("Keep this token number for vehicle exit.");
         System.out.println("===================================");
     }
+
     // Allocate spots based on parking duration
     static int[] findSpot(int type, int duration) {
         int startLevel = (type == 1) ? 0 : 2;
@@ -268,7 +272,8 @@ public class MultiLevelParkingManagementSystem {
 
         return null;
     }
-// Show availability for every level
+
+    // Show availability for every level
     static void showAvailableSlots() {
         System.out.println("\n--- PARKING SLOT AVAILABILITY ---");
 
@@ -312,7 +317,8 @@ public class MultiLevelParkingManagementSystem {
             }
         }
     }
-// Search all stored records
+
+    // Search all stored records
     static void viewAllDetails() {
         System.out.println("\n--- CUSTOMER AND VEHICLE DETAILS ---");
 
@@ -351,6 +357,7 @@ public class MultiLevelParkingManagementSystem {
         }
 
         long exitTime = System.currentTimeMillis();
+
         // Charge for actual time, rounding up to the next hour.
         // The expected duration is used for slot allocation only.
         long elapsedMillis = exitTime - r.entryTime;
@@ -391,7 +398,8 @@ public class MultiLevelParkingManagementSystem {
         System.out.println("\nNote: This is a bill calculation demo.");
         System.out.println("No actual payment is collected.");
     }
-static String formatTime(long time) {
+
+    static String formatTime(long time) {
         return LocalDateTime.ofInstant(
                 java.time.Instant.ofEpochMilli(time),
                 java.time.ZoneId.systemDefault()
@@ -431,7 +439,8 @@ static String formatTime(long time) {
         System.out.printf("Recorded Bills      : Rs. %.2f%n", revenue);
         System.out.println("=====================================");
     }
-// Save every record to a text file
+
+    // Save every record to a text file
     static void saveRecords() {
         try {
             ArrayList<String> lines = new ArrayList<>();
@@ -464,7 +473,8 @@ static String formatTime(long time) {
                     if (p.length != 11) {
                         continue;
                     }
-ParkingRecord r = new ParkingRecord(
+
+                    ParkingRecord r = new ParkingRecord(
                             p[0], p[1], p[2], p[3], p[4],
                             Integer.parseInt(p[5]), p[6],
                             Integer.parseInt(p[7]),
@@ -482,6 +492,7 @@ ParkingRecord r = new ParkingRecord(
                             && !r.status.equals("COMPLETED"))) {
                         continue;
                     }
+
                     // Ignore conflicting active records in a damaged file
                     if (r.status.equals("ACTIVE")
                             && occupied[levelIndex][r.slot - 1]) {
