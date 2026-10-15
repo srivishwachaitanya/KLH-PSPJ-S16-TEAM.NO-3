@@ -1,0 +1,18 @@
+CO3: Methods, Recursion & Arrays (1-D and 2-D Arrays)
+Manages parking levels via 1-D strings and slot occupancy states via 2-D booleans
+// Parking levels: T = two-wheeler, F = four-wheeler
+    static String[] levels = {"T1", "T2", "F1", "F2"};
+    static boolean[][] occupied = new boolean[4][SLOTS_PER_LEVEL];
+
+    static void showAvailableSlots() {
+        System.out.println("\n--- Available Slots ---");
+        for (int i = 0; i < levels.length; i++) {
+            System.out.print("Level " + levels[i] + ": ");
+            for (int j = 0; j < SLOTS_PER_LEVEL; j++) {
+                if (!occupied[i][j]) {
+                    System.out.print("[Slot " + (j + 1) + "] ");
+                }
+            }
+            System.out.println();
+        }
+    }
