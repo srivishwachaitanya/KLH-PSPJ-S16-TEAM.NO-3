@@ -391,3 +391,43 @@ public class MultiLevelParkingManagementSystem {
         System.out.println("\nNote: This is a bill calculation demo.");
         System.out.println("No actual payment is collected.");
     }
+static String formatTime(long time) {
+        return LocalDateTime.ofInstant(
+                java.time.Instant.ofEpochMilli(time),
+                java.time.ZoneId.systemDefault()
+        ).format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
+    }
+
+    // Dashboard summary
+    static void showDashboardSummary() {
+        int active = 0;
+        int completed = 0;
+        int available = 0;
+        double revenue = 0;
+
+        for (ParkingRecord r : records) {
+            if (r.status.equals("ACTIVE")) {
+                active++;
+            } else {
+                completed++;
+                revenue += r.bill;
+            }
+        }
+
+        for (int l = 0; l < occupied.length; l++) {
+            for (int s = 0; s < occupied[l].length; s++) {
+                if (!occupied[l][s]) {
+                    available++;
+                }
+            }
+        }
+
+        System.out.println("\n========== PARKING SUMMARY ==========");
+        System.out.println("Total Parking Spots : "
+                + (levels.length * SLOTS_PER_LEVEL));
+        System.out.println("Available Spots     : " + available);
+        System.out.println("Vehicles Parked     : " + active);
+        System.out.println("Completed Sessions  : " + completed);
+        System.out.printf("Recorded Bills      : Rs. %.2f%n", revenue);
+        System.out.println("=====================================");
+    }
