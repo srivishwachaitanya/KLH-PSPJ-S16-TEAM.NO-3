@@ -1,0 +1,15 @@
+CO6: Collections & Streams Framework
+Manages dynamic collections via ArrayList and expresses data processing declaratively using Stream pipelines
+// Dynamic Collection Storage
+    static ArrayList<ParkingRecord> records = new ArrayList<>();
+
+    // Declarative Processing using Stream API
+    static void showDashboardSummary() {
+        long activeCount = records.stream().filter(r -> r.status.equals("PARKED")).count();
+        long completedCount = records.stream().filter(r -> r.status.equals("COMPLETED")).count();
+        
+        System.out.println("\n--- System Summary ---");
+        System.out.println("Active Parked Vehicles : " + activeCount);
+        System.out.println("Completed Sessions     : " + completedCount);
+        System.out.println("Total Records Logged   : " + records.size());
+    }
