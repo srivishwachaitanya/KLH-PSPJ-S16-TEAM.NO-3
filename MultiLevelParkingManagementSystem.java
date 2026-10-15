@@ -482,3 +482,25 @@ ParkingRecord r = new ParkingRecord(
                             && !r.status.equals("COMPLETED"))) {
                         continue;
                     }
+                    // Ignore conflicting active records in a damaged file
+                    if (r.status.equals("ACTIVE")
+                            && occupied[levelIndex][r.slot - 1]) {
+                        continue;
+                    }
+
+                    records.add(r);
+
+                    if (r.status.equals("ACTIVE")) {
+                        occupied[levelIndex][r.slot - 1] = true;
+                    }
+
+                } catch (NumberFormatException e) {
+                    System.out.println("Skipping a malformed saved record.");
+                }
+            }
+
+        } catch (IOException e) {
+            System.out.println("Could not load records: " + e.getMessage());
+        }
+    }
+}
