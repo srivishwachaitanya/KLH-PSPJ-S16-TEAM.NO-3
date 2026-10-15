@@ -312,3 +312,42 @@ public class MultiLevelParkingManagementSystem {
             }
         }
     }
+// Search all stored records
+    static void viewAllDetails() {
+        System.out.println("\n--- CUSTOMER AND VEHICLE DETAILS ---");
+
+        if (records.isEmpty()) {
+            System.out.println("No parking records available.");
+            return;
+        }
+
+        for (ParkingRecord r : records) {
+            r.display();
+        }
+    }
+
+    // Find record by token
+    static ParkingRecord findRecord(String token) {
+        for (ParkingRecord r : records) {
+            if (r.token.equalsIgnoreCase(token)) {
+                return r;
+            }
+        }
+        return null;
+    }
+
+    // Vehicle exit and bill generation
+    static void removeVehicle() {
+        System.out.println("\n--- VEHICLE EXIT ---");
+
+        System.out.print("Enter parking token number: ");
+        String token = sc.nextLine().trim();
+
+        ParkingRecord r = findRecord(token);
+
+        if (r == null || !r.status.equals("ACTIVE")) {
+            System.out.println("Active parking record not found.");
+            return;
+        }
+
+        long exitTime = System.currentTimeMillis();
