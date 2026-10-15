@@ -70,6 +70,53 @@ public class MultiLevelParkingManagementSystem {
             System.out.println("Status         : " + status);
             if (status.equals("COMPLETED")) {
                 System.out.printf("Parking Bill   : Rs. %.2f%n", bill);
+                
+    public static void main(String[] args) {
+        loadRecords();
+
+        System.out.println("\n======================================");
+        System.out.println("    MULTI-LEVEL PARKING MANAGEMENT");
+        System.out.println("======================================");
+        System.out.println(" Welcome! Manage your parking easily.");
+        System.out.println("======================================");
+
+        int choice;
+
+        do {
+            showDashboard();
+            choice = readInt("Enter your choice: ");
+
+            switch (choice) {
+                case 1:
+                    parkVehicle();
+                    break;
+                case 2:
+                    showAvailableSlots();
+                    break;
+                case 3:
+                    searchToken();
+                    break;
+                case 4:
+                    viewAllDetails();
+                    break;
+                case 5:
+                    removeVehicle();
+                    break;
+                case 6:
+                    showDashboardSummary();
+                    break;
+                case 7:
+                    System.out.println("Thank you for using our system!");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Try again.");
+            }
+        } while (choice != 7);
+
+        sc.close();
+    }
+
+
             }
             System.out.println("----------------------------------");
         }
